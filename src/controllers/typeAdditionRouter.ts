@@ -4,10 +4,10 @@ import { TypeAdditionModel } from "../models/models.js";
 class TypeAdditionController {
   async createTypeAddition(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, price_coefficient, typeId, addition_lvl } = req.body;
+      const { name, price, typeId, addition_lvl } = req.body;
       const typeAddition = await TypeAdditionModel.create({
         name,
-        price_coefficient,
+        price,
         typeId,
         addition_lvl,
       });
@@ -24,11 +24,15 @@ class TypeAdditionController {
       next(e);
     }
   }
-  async getTypeAdditionById(req: Request, res: Response, next: NextFunction) {
+  async getTypeAdditionByTypeId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { id } = req.params;
-      const typeAddition = await TypeAdditionModel.findOne({
-        where: { id: id },
+      const { typeId } = req.params;
+      const typeAddition = await TypeAdditionModel.findAll({
+        where: { $typeId$: typeId },
       });
       return res.status(200).json(typeAddition);
     } catch (e: any) {

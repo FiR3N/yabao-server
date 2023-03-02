@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import ApiError from "../exceptions/ApiError.js";
-import { validationResult } from "express-validator";
+import { cookie, validationResult } from "express-validator";
 import { userService } from "../services/userService.js";
-import { BasketModel } from "../models/models.js";
+import { BasketModel, UserModel } from "../models/models.js";
 class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
@@ -11,6 +11,8 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        sameSite: "none",
+        secure: true,
       });
       return res.json(userData);
     } catch (e: any) {
@@ -37,6 +39,8 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        sameSite: "none",
+        secure: true,
       });
       return res.json(userData);
     } catch (e: any) {
@@ -50,6 +54,8 @@ class UserController {
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        sameSite: "none",
+        secure: true,
       });
       return res.json(userData);
     } catch (e: any) {
@@ -72,6 +78,36 @@ class UserController {
       await userService.activate(activationLink);
       return res.redirect(process.env.CLIENT_URL as string);
     } catch (e) {
+      next(e);
+    }
+  }
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const user = await UserModel.findOne({ where: { $id$: id } });
+      return res.json(user);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async updateUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { name, surname, phone } = req.body;
+      await UserModel.update(
+        { name: name, surname: surname, phone: phone },
+        { where: { $id$: id } }
+      );
+      return res.status(200).json(`User id: ${id} was updated`);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async getUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await UserModel.findAll();
+      return res.json(users);
+    } catch (e: any) {
       next(e);
     }
   }

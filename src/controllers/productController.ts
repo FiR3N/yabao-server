@@ -25,9 +25,7 @@ class ProductController {
       let imgPathname;
       if (img) {
         imgPathname = v4() + ".jpg";
-        img.mv(
-          path.resolve(__dirname, "..", "static", "products", imgPathname)
-        );
+        img.mv(path.resolve(__dirname, "static", "products", imgPathname));
       } else {
         imgPathname = PLUG_IMG;
       }
@@ -51,6 +49,17 @@ class ProductController {
   async getAllProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const products = await ProductModel.findAll();
+      return res.status(200).json(products);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async getProductsByTypeId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { typeId } = req.params;
+      const products = await ProductModel.findAll({
+        where: { $typeId$: typeId },
+      });
       return res.status(200).json(products);
     } catch (e: any) {
       next(e);
@@ -88,7 +97,6 @@ class ProductController {
           fs.unlink(
             path.resolve(
               __dirname,
-              "..",
               "static",
               "products",
               productBeforeUpd?.img!
@@ -131,13 +139,7 @@ class ProductController {
       });
       if (productBeforeDst?.img != PLUG_IMG) {
         fs.unlink(
-          path.resolve(
-            __dirname,
-            "..",
-            "static",
-            "products",
-            productBeforeDst?.img!
-          ),
+          path.resolve(__dirname, "static", "products", productBeforeDst?.img!),
           (err) => {
             if (err) next(ApiError.BadRequest(err.message, []));
             console.log(`products/${productBeforeDst?.img}.png was deleted`);

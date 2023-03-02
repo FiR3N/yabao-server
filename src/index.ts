@@ -8,22 +8,26 @@ import router from "./routes/router.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 import path from "path";
+const __dirname = path.resolve("src");
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-console.log(models);
 const app = express();
 
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "*",
+    origin: "http://127.0.0.1:3000",
   })
 );
+app.use(express.urlencoded());
+app.use(express.static(path.resolve(__dirname, "static")));
+app.use(express.static(path.resolve(__dirname, "static", "news")));
+app.use(express.static(path.resolve(__dirname, "static", "products")));
 app.use(fileUpload({}));
-app.use(express.static("static"));
+
 app.use("/api", router);
 
 app.use(errorMiddleware);

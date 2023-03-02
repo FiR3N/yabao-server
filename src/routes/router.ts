@@ -1,5 +1,6 @@
 import Router from "express";
 import basketItemsRouter from "./basketItemsRouter.js";
+import mailRouter from "./mailRouter.js";
 import newsRouter from "./newsRouter.js";
 import orderRouter from "./orderRouter.js";
 import orderTypesRouter from "./orderTypesRouter.js";
@@ -17,5 +18,6 @@ router.use("/types-additions", typeAdditionRouter);
 router.use("/orders", orderRouter);
 router.use("/orders-types", orderTypesRouter);
 router.use("/basket-items", basketItemsRouter);
+router.use("/mail", mailRouter);
 
 export default router;

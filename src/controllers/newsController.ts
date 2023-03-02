@@ -11,14 +11,13 @@ import fs from "fs";
 class NewsController {
   async createNews(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log(__dirname);
       const { name, desc, userId } = req.body;
       const img = req.files?.img as UploadedFile;
       let imgPathname;
       if (img) {
         imgPathname = v4() + ".jpg";
-        img.mv(
-          path.resolve(__dirname, "..", "static", "products", imgPathname)
-        );
+        img.mv(path.resolve(__dirname, "static", "news", imgPathname));
       } else {
         imgPathname = PLUG_NEWS_IMG;
       }
@@ -35,7 +34,9 @@ class NewsController {
   }
   async getAllNews(req: Request, res: Response, next: NextFunction) {
     try {
-      const news = await NewsModal.findAll();
+      let { limit }: any = req.query;
+      limit = limit || null;
+      const news = await NewsModal.findAll({ limit });
       return res.status(200).json(news);
     } catch (e: any) {
       next(e);
@@ -56,7 +57,7 @@ class NewsController {
       const newsBeforeDst = await NewsModal.findOne({ where: { id: id } });
       if (newsBeforeDst?.img != PLUG_NEWS_IMG) {
         fs.unlink(
-          path.resolve(__dirname, "..", "static", "news", newsBeforeDst?.img!),
+          path.resolve(__dirname, "static", "news", newsBeforeDst?.img!),
           (err) => {
             if (err) next(ApiError.BadRequest(err.message, []));
             console.log(`news/${newsBeforeDst?.img}.png was deleted`);
@@ -95,7 +96,7 @@ class NewsController {
             }
           );
         }
-        img.mv(path.resolve(__dirname, "..", "static", "news", imgPathname));
+        img.mv(path.resolve(__dirname, "static", "news", imgPathname));
       } else {
         imgPathname = newsBeforeUpd?.img;
       }

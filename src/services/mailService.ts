@@ -29,6 +29,16 @@ class MailService {
 				`,
     });
   }
+
+  async sendMessageFromUser(email: string, theme: string, text: string) {
+    await this.transporter.sendMail({
+      from: email,
+      to: process.env.SMPTP_USER,
+      subject: `Тема: ${theme}`,
+      text: text,
+      html: `<div>From ${email}<br>${text}</div>`,
+    });
+  }
 }
 
 export const mailService = new MailService();

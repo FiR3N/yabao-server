@@ -166,6 +166,7 @@ class TypeModel extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
+  // declare nameEn: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -174,6 +175,7 @@ TypeModel.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
+    // nameEn: { type: DataTypes.STRING, allowNull: false },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
@@ -191,7 +193,7 @@ class TypeAdditionModel extends Model<
   declare typeId: ForeignKey<TypeModel["id"]>;
   declare name: string;
   declare addition_lvl: string;
-  declare price_coefficient: number;
+  declare price: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -201,7 +203,7 @@ TypeAdditionModel.init(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
     addition_lvl: { type: DataTypes.STRING, allowNull: false },
-    price_coefficient: { type: DataTypes.DECIMAL, allowNull: false },
+    price: { type: DataTypes.DECIMAL, allowNull: false },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },

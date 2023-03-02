@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import ApiError from "../exceptions/ApiError.js";
 import { TokenModel } from "../models/models.js";
 
 class TokenService {
@@ -48,12 +49,14 @@ class TokenService {
   }
 
   async saveToken(userId: number, refreshToken: any) {
-    const tokenData = await TokenModel.findOne({ where: { userId: userId } });
+    const tokenData = await TokenModel.findOne({
+      where: { $userId$: userId },
+    });
     if (tokenData) {
       tokenData.refreshToken = refreshToken;
       return tokenData.save();
     }
-    const token = await TokenModel.create({ userId, refreshToken });
+    const token = await TokenModel.create({ refreshToken, userId });
     return token;
   }
 
