@@ -14,9 +14,12 @@ userRouter.get("/refresh", userController.refresh);
 userRouter.get("/activate/:link", userController.activate);
 userRouter.get("/", userController.getUsers);
 userRouter.get("/user/:id", userController.getUserById);
-
 userRouter.post("/reg", userController.registration);
 userRouter.post("/logout", userController.logout);
+userRouter.post(
+  "/send-activation-message",
+  userController.sendActivationMessage
+);
 userRouter.post("/:id", userController.updateUserById);
 
 export default userRouter;

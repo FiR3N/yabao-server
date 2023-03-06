@@ -3,6 +3,7 @@ import ApiError from "../exceptions/ApiError.js";
 import { cookie, validationResult } from "express-validator";
 import { userService } from "../services/userService.js";
 import { BasketModel, UserModel } from "../models/models.js";
+import { mailService } from "../services/mailService.js";
 class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
@@ -35,7 +36,10 @@ class UserController {
         name,
         surname
       );
-      await BasketModel.create({ userId: userData.user.id });
+      await BasketModel.create({
+        id: userData.user.id,
+        userId: userData.user.id,
+      });
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -99,6 +103,19 @@ class UserController {
         { where: { $id$: id } }
       );
       return res.status(200).json(`User id: ${id} was updated`);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async sendActivationMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log("message");
+      const { email, activationLink } = req.body;
+      await mailService.sendActivationMail(
+        email,
+        `${process.env.API_URL}/api/users/activate/${activationLink}`
+      );
+      return res.json("Сообщение было успешно отправлено");
     } catch (e: any) {
       next(e);
     }

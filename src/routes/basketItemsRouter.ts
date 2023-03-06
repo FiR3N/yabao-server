@@ -4,18 +4,14 @@ import authMiddleware from "../middleware/authMiddleware.js";
 const basketItemsRouter = Router();
 
 basketItemsRouter.get(
-  "/:orderId",
+  "/order/:orderId",
   basketItemController.getAllBasketItemsByOrderId
 );
 basketItemsRouter.get(
   "/:basketId",
   basketItemController.getAllBasketItemsByBasketId
 );
-basketItemsRouter.post(
-  "/",
-  authMiddleware,
-  basketItemController.addToBasketItems
-);
+basketItemsRouter.post("/", basketItemController.addToBasketItems);
 basketItemsRouter.delete(
   "/:id",
   authMiddleware,
