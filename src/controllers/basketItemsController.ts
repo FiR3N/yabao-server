@@ -27,6 +27,7 @@ class BasketItemController {
       });
       return res.status(200).json(basketItems);
     } catch (e: any) {
+      console.log(e.message);
       next(e);
     }
   }
@@ -41,6 +42,16 @@ class BasketItemController {
         where: { orderId: orderId },
       });
       return res.status(200).json(basketItems);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async putCountOfBasketItem(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { count } = req.body;
+      await BasketItemModel.update({ count: count }, { where: { id: id } });
+      return res.status(200).json(`Basket Item id: ${id} was updated`);
     } catch (e: any) {
       next(e);
     }

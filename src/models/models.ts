@@ -1,5 +1,6 @@
 import sequelize from "../db.js";
 import {
+  Association,
   CreationOptional,
   DataTypes,
   ForeignKey,
@@ -139,6 +140,11 @@ class ProductModel extends Model<
   declare isAvailable: boolean;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  //dont work
+  declare static associations: {
+    basketItems: Association<ProductModel, BasketItemModel>;
+  };
 }
 
 ProductModel.init(
@@ -439,12 +445,19 @@ OrderModal.hasMany(BasketItemModel, {
   as: "basket-items",
 });
 
+//dont work
 ProductModel.hasMany(BasketItemModel, {
   sourceKey: "id",
   foreignKey: "productId",
-  as: "basket-items",
+  as: "basket-items", // this determines the name in `associations`!
 });
-// BasketItemModel.belongsTo(OrderModal);
+// BasketItemModel.belongsTo(ProductModel);
+
+// ProductModel.hasMany(BasketItemModel, {
+//   sourceKey: "id",
+//   foreignKey: "productId",
+//   as: "basketItems",
+// });
 
 BasketModel.hasMany(OrderModal, {
   sourceKey: "id",

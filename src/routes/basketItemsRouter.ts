@@ -17,5 +17,10 @@ basketItemsRouter.delete(
   authMiddleware,
   basketItemController.deleteBasketItem
 );
+basketItemsRouter.put(
+  "/:id",
+  authMiddleware,
+  basketItemController.putCountOfBasketItem
+);
 
 export default basketItemsRouter;
