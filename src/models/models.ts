@@ -451,7 +451,7 @@ ProductModel.hasMany(BasketItemModel, {
   foreignKey: "productId",
   as: "basket-items", // this determines the name in `associations`!
 });
-// BasketItemModel.belongsTo(ProductModel);
+BasketItemModel.belongsTo(ProductModel, { foreignKey: "productId" });
 
 // ProductModel.hasMany(BasketItemModel, {
 //   sourceKey: "id",

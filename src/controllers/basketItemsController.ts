@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BasketItemModel } from "../models/models.js";
+import { BasketItemModel, ProductModel } from "../models/models.js";
 class BasketItemController {
   async addToBasketItems(req: Request, res: Response, next: NextFunction) {
     try {
@@ -15,6 +15,7 @@ class BasketItemController {
       next(e);
     }
   }
+  //include so good
   async getAllBasketItemsByBasketId(
     req: Request,
     res: Response,
@@ -24,6 +25,11 @@ class BasketItemController {
       const { basketId } = req.params;
       const basketItems = await BasketItemModel.findAll({
         where: { basketId: basketId },
+        // include: [
+        //   {
+        //     model: ProductModel,
+        //   },
+        // ],
       });
       return res.status(200).json(basketItems);
     } catch (e: any) {
@@ -50,8 +56,9 @@ class BasketItemController {
     try {
       const { id } = req.params;
       const { count } = req.body;
+      const item = await BasketItemModel.findOne({ where: { id: id } });
       await BasketItemModel.update({ count: count }, { where: { id: id } });
-      return res.status(200).json(`Basket Item id: ${id} was updated`);
+      return res.status(200).json(item);
     } catch (e: any) {
       next(e);
     }
@@ -61,6 +68,24 @@ class BasketItemController {
       const { id } = req.params;
       await BasketItemModel.destroy({ where: { id: id } });
       return res.status(200).json(`Basket Item id: ${id} was deleted`);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async deleteBasketItemByBasketIdAndProductId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { basketId, productId } = req.params;
+      const basketItem = await BasketItemModel.findOne({
+        where: { basketId: basketId, productId: productId },
+      });
+      await BasketItemModel.destroy({
+        where: { basketId: basketId, productId: productId },
+      });
+      return res.status(200).json(basketItem);
     } catch (e: any) {
       next(e);
     }

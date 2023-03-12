@@ -17,9 +17,14 @@ basketItemsRouter.delete(
   authMiddleware,
   basketItemController.deleteBasketItem
 );
+basketItemsRouter.delete(
+  "/basket/:basketId/product/:productId",
+  authMiddleware,
+  basketItemController.deleteBasketItemByBasketIdAndProductId
+);
 basketItemsRouter.put(
   "/:id",
-  authMiddleware,
+  // authMiddleware,
   basketItemController.putCountOfBasketItem
 );
 
