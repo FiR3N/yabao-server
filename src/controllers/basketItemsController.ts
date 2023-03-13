@@ -25,11 +25,11 @@ class BasketItemController {
       const { basketId } = req.params;
       const basketItems = await BasketItemModel.findAll({
         where: { basketId: basketId },
-        // include: [
-        //   {
-        //     model: ProductModel,
-        //   },
-        // ],
+        include: [
+          {
+            model: ProductModel,
+          },
+        ],
       });
       return res.status(200).json(basketItems);
     } catch (e: any) {
