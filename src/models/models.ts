@@ -349,6 +349,7 @@ class OrderModal extends Model<
 > {
   declare id: CreationOptional<number>;
   declare totalPrice: number;
+  declare address: string;
   declare basketId: ForeignKey<BasketModel["id"]>;
   declare orderTypeId: ForeignKey<OrderTypeModel["id"]>;
   declare createdAt: CreationOptional<Date>;
@@ -359,6 +360,7 @@ OrderModal.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     totalPrice: { type: DataTypes.DECIMAL, allowNull: false },
+    address: { type: DataTypes.STRING, allowNull: false },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },

@@ -11,7 +11,7 @@ class OrderController {
   }
   async createOrder(req: Request, res: Response, next: NextFunction) {
     try {
-      const { basketId } = req.body;
+      const { basketId, address } = req.body;
       const basketItems = await BasketItemModel.findAll({
         where: { $basketId$: basketId, $orderId$: null },
         include: ProductModel,
@@ -25,6 +25,7 @@ class OrderController {
       const order = await OrderModal.create({
         basketId,
         totalPrice,
+        address: address,
         orderTypeId: 1,
       });
       return res.status(201).json(order);
