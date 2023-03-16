@@ -18,8 +18,10 @@ class OrderController {
       });
       const totalPrice: number = basketItems.reduce(
         (totalPrice: number, item: any) =>
-          totalPrice +
-          (item.isDiscount ? item.discountedPrice : item.price) * item.count,
+          (totalPrice +=
+            (item.isDiscount
+              ? Number(item.discountedPrice)
+              : Number(item.price)) * item.count),
         0
       );
       const order = await OrderModal.create({
@@ -28,6 +30,10 @@ class OrderController {
         address: address,
         orderTypeId: 1,
       });
+      await BasketItemModel.update(
+        { orderId: order.id },
+        { where: { $basketId$: basketId, $orderId$: null } }
+      );
       return res.status(201).json(order);
     } catch (e: any) {
       next(e);

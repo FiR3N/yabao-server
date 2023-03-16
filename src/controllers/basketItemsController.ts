@@ -24,7 +24,7 @@ class BasketItemController {
     try {
       const { basketId } = req.params;
       const basketItems = await BasketItemModel.findAll({
-        where: { basketId: basketId },
+        where: { basketId: basketId, $orderId$: null },
         include: [
           {
             model: ProductModel,
