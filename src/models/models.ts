@@ -9,82 +9,6 @@ import {
   Model,
 } from "sequelize";
 
-// export const Users = sequelize.define("users", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   email: { type: DataTypes.STRING, allowNull: false, unique: true },
-//   phone: { type: DataTypes.STRING, allowNull: false, unique: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-//   surname: { type: DataTypes.STRING, allowNull: false },
-//   isConfirmed: {
-//     type: DataTypes.BOOLEAN,
-//     allowNull: false,
-//     defaultValue: false,
-//   },
-// });
-
-// export const Products = sequelize.define("products", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-//   img: { type: DataTypes.STRING, allowNull: false },
-//   desc: { type: DataTypes.STRING, allowNull: false },
-//   price: { type: DataTypes.DECIMAL, allowNull: false },
-//   discountedPrice: { type: DataTypes.DECIMAL, allowNull: true },
-//   isDiscount: { type: DataTypes.BOOLEAN, allowNull: false },
-//   isAvailable: { type: DataTypes.BOOLEAN, allowNull: false },
-// });
-
-// export const Types = sequelize.define("types", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-// });
-
-// export const Roles = sequelize.define("roles", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-// });
-
-// export const BasketItems = sequelize.define("basketItems", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   count: { type: DataTypes.INTEGER, allowNull: false },
-// });
-
-// export const Basket = sequelize.define("basket", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-// });
-
-// export const OrderTypes = sequelize.define("orderTypes", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-// });
-// export const Orders = sequelize.define("orders", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   totalPrice: { type: DataTypes.DECIMAL, allowNull: false },
-// });
-
-//export const News = sequelize.define("news", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-//   desc: { type: DataTypes.STRING, allowNull: false },
-//   img: { type: DataTypes.STRING, allowNull: false },
-// });
-
-// export const Types_addition = sequelize.define("types_addition", {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: DataTypes.STRING, allowNull: false },
-//   addition_lvl: { type: DataTypes.STRING, allowNull: false },
-//   price_coefficient: { type: DataTypes.DECIMAL, allowNull: false },
-// });
-
-// const Token = sequelize.define("tokens", {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true,
-//     allowNull: false,
-//   },
-//   refreshToken: { type: DataTypes.STRING, allowNull: false },
-// });
-
 class UserModel extends Model<
   InferAttributes<UserModel>,
   InferCreationAttributes<UserModel>
@@ -141,7 +65,6 @@ class ProductModel extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
-  //dont work
   declare static associations: {
     basketItems: Association<ProductModel, BasketItemModel>;
   };
@@ -172,7 +95,6 @@ class TypeModel extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  // declare nameEn: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -181,7 +103,6 @@ TypeModel.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
-    // nameEn: { type: DataTypes.STRING, allowNull: false },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
