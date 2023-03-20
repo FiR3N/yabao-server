@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { BasketItemModel, OrderModal, ProductModel } from "../models/models.js";
+import {
+  BasketItemModel,
+  OrderModal,
+  ProductModel,
+  PromocodesModel,
+} from "../models/models.js";
 class OrderController {
   async getOrders(req: Request, res: Response, next: NextFunction) {
     try {
@@ -11,12 +16,13 @@ class OrderController {
   }
   async createOrder(req: Request, res: Response, next: NextFunction) {
     try {
-      const { basketId, address } = req.body;
+      let { basketId, address, promocodeID } = req.body;
+      promocodeID = promocodeID || null;
       const basketItems = await BasketItemModel.findAll({
         where: { $basketId$: basketId, $orderId$: null },
         include: ProductModel,
       });
-      const totalPrice: number = basketItems.reduce(
+      let totalPrice: number = basketItems.reduce(
         (totalPrice: number, item: any) =>
           (totalPrice +=
             (item.isDiscount
@@ -24,11 +30,18 @@ class OrderController {
               : Number(item.price)) * item.count),
         0
       );
+      const promo = await PromocodesModel.findOne({
+        where: { $id$: promocodeID },
+      });
+      if (promo) {
+        totalPrice = totalPrice - totalPrice * promo.rebate;
+      }
       const order = await OrderModal.create({
         basketId,
         totalPrice,
         address: address,
         orderTypeId: 1,
+        promocodeID: promocodeID,
       });
       await BasketItemModel.update(
         { orderId: order.id },

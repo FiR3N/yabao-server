@@ -273,6 +273,7 @@ class OrderModal extends Model<
   declare address: string;
   declare basketId: ForeignKey<BasketModel["id"]>;
   declare orderTypeId: ForeignKey<OrderTypeModel["id"]>;
+  declare promocodeID: ForeignKey<PromocodesModel["id"]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -317,6 +318,32 @@ TokenModel.init(
   {
     sequelize: sequelize,
     tableName: "tokens",
+  }
+);
+
+class PromocodesModel extends Model<
+  InferAttributes<PromocodesModel>,
+  InferCreationAttributes<PromocodesModel>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare rebate: number;
+  // declare orderTypeId: ForeignKey<OrderTypeModel["id"]>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+
+PromocodesModel.init(
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    rebate: { type: DataTypes.DECIMAL, allowNull: false },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+  },
+  {
+    sequelize: sequelize,
+    tableName: "promos",
   }
 );
 
@@ -392,7 +419,7 @@ BasketModel.hasMany(OrderModal, {
 OrderTypeModel.hasMany(OrderModal, {
   sourceKey: "id",
   foreignKey: "orderTypeId",
-  as: "orders-items",
+  as: "orders",
 });
 // OrderModal.belongsTo(OrderTypeModel);
 
@@ -404,6 +431,12 @@ UserModel.hasOne(TokenModel, {
 // TokenModel.belongsTo(UserModel, {
 //   targetKey: "id",
 // });
+
+PromocodesModel.hasMany(OrderModal, {
+  sourceKey: "id",
+  foreignKey: "promocodeId",
+  as: "orders",
+});
 
 export {
   UserModel,
@@ -417,4 +450,5 @@ export {
   OrderModal,
   NewsModal,
   TokenModel,
+  PromocodesModel,
 };
