@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../exceptions/ApiError.js";
 import { PromocodesModel } from "../models/models.js";
+import { Op } from "sequelize";
+
 class PromocodesController {
   async createPromo(req: Request, res: Response, next: NextFunction) {
     try {
@@ -26,6 +27,18 @@ class PromocodesController {
     try {
       const { id } = req.params;
       const promo = await PromocodesModel.findOne({ where: { id: id } });
+      return res.status(200).json(promo);
+    } catch (e: any) {
+      next(e);
+    }
+  }
+  async getPromoByName(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name } = req.body;
+      console.log("qqq: ", name);
+      const promo = await PromocodesModel.findOne({
+        where: { $name$: { [Op.like]: name } },
+      });
       return res.status(200).json(promo);
     } catch (e: any) {
       next(e);

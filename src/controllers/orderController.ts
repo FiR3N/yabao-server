@@ -16,8 +16,8 @@ class OrderController {
   }
   async createOrder(req: Request, res: Response, next: NextFunction) {
     try {
-      let { basketId, address, promocodeID } = req.body;
-      promocodeID = promocodeID || null;
+      let { basketId, address, promocodeId } = req.body;
+      promocodeId = promocodeId || null;
       const basketItems = await BasketItemModel.findAll({
         where: { $basketId$: basketId, $orderId$: null },
         include: ProductModel,
@@ -25,23 +25,27 @@ class OrderController {
       let totalPrice: number = basketItems.reduce(
         (totalPrice: number, item: any) =>
           (totalPrice +=
-            (item.isDiscount
-              ? Number(item.discountedPrice)
-              : Number(item.price)) * item.count),
+            (item?.ProductModel.isDiscount
+              ? Number(item?.ProductModel.discountedPrice)
+              : Number(item?.ProductModel.price)) * item?.count),
         0
       );
+
       const promo = await PromocodesModel.findOne({
-        where: { $id$: promocodeID },
+        where: { $id$: promocodeId },
       });
       if (promo) {
         totalPrice = totalPrice - totalPrice * promo.rebate;
       }
+      console.log(promocodeId);
+      console.log(promo);
+      console.log(totalPrice);
       const order = await OrderModal.create({
         basketId,
         totalPrice,
         address: address,
         orderTypeId: 1,
-        promocodeID: promocodeID,
+        promocodeID: promocodeId,
       });
       await BasketItemModel.update(
         { orderId: order.id },

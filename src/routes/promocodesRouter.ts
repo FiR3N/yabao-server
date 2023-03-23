@@ -3,9 +3,10 @@ import { promocodesController } from "../controllers/promocodesController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 const promocodesRouter = Router();
 
+promocodesRouter.post("/name", promocodesController.getPromoByName);
 promocodesRouter.get("/", authMiddleware, promocodesController.getAllPromos);
 promocodesRouter.get("/:id", promocodesController.getPromoById);
-promocodesRouter.post("/", authMiddleware, promocodesController.createPromo);
+promocodesRouter.post("/", promocodesController.createPromo);
 promocodesRouter.delete(
   "/:id",
   authMiddleware,
